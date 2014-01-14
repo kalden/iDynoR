@@ -1,0 +1,82 @@
+\name{Technique 2: Reading Agent State and Agent Sum Files}
+
+\alias{agent_returnSimIteration}
+\alias{agent_returnSimTime}
+\alias{agent_returnGridResolution}
+\alias{agent_returnIVoxels}
+\alias{agent_returnJVoxels}
+\alias{agent_returnKVoxels}
+\alias{agent_returnSpeciesResultData}
+\alias{agent_returnNumSpecies}
+\alias{agent_returnSpeciesColumnTotal}
+
+\title{Technique 2: Reading Agent State and Agent Sum Files}
+\description{
+During the course of a simulation, iDynoMiCS will save output files describing the current agent states. These output files will be written at the interval specified by the outputPeriod parameter in the simulator mark-up of the simulation protocol file (see Protocol File section of iDynoMiCS tutorial for more information). In each file name, the number in brackets represents the simulation timestep at which the file was written. The agent_State and agent_Sum files describe the state of the agents in the system; the agent_State file describes each agent in detail, while the agent_Sum file summarizes the agents on the species level.\cr
+\cr
+The previous technique read the file into a structure that can be processed in R. This section describes methods that can be utilised to extract data from an agent_state or agent_sum file for processing using statistical methods. This provides the user with the basic functionality to extract the data they need, then write their analysis scripts accordingly. Some example analysis scripts that use the methods in this section have been provided, and are described in Technique 3.\cr
+\cr
+The following methods are available for both agent_State and agent_Sum files:\cr
+\bold{agent_returnSimIteration}: Returns the simulation iteration that produced this output file.\cr
+\bold{agent_returnSimTime}: Returns the simulation time represented by that iteration number (hours).\cr
+\bold{agent_returnGridResolution}: Returns the grid resolution of the simulation domain. \cr
+\bold{agent_returnIVoxels}: Returns the number of voxels in the I direction of the domain. \cr
+\bold{agent_returnJVoxels}: Returns the number of voxels in the J direction of the domain.\cr
+\bold{agent_returnKVoxels}: Returns the number of voxels in the K direction of the domain.\cr
+\bold{agent_returnSpeciesResultData}: Extracts all of the species information from the file, storing each species in a list. The method returns a list, containing each species list. Relevant simulation responses can then be extracted from the relevant list. \cr
+\bold{agent_returnNumSpecies}: Returns the number of species in this results file. \cr
+\bold{agent_returnSpeciesColumnTotal}: For a particular species and simulation response of interest (stored in columns in the result file), returns the total of that response. For example, if there were 100 individuals of a particular species, this totals all responses of a specified response.}
+\usage{
+agent_returnSimIteration(xmlResultData)
+agent_returnSimTime(xmlResultData)
+agent_returnGridResolution(xmlResultData)
+agent_returnIVoxels(xmlResultData)
+agent_returnJVoxels(xmlResultData)
+agent_returnKVoxels(xmlResultData)
+agent_returnSpeciesResultData(xmlResultData)
+agent_returnNumSpecies(allSpecies)
+agent_returnSpeciesColumnTotal(allSpecies, speciesReqd, columnName)
+}
+\arguments{
+  \item{xmlResultData}{The structure created by Technique 1, containing the data in the agent_state or agent_sum file. Created using the method readSimResultFile}
+  \item{allSpecies}{All of the species information in the agent_state or agent_sum file. Relevant species data from this list can then be extracted by other methods}
+  \item{speciesReqd}{Where extracting data from the species information, this specifies the species of interest}
+  \item{columnName}{Where extracting data from the species information, this specifies the column of interest (e.g. growthRate)}  
+}
+
+\examples{
+\dontrun{
+# DONTRUN IS SET SO THIS IS NOT EXECUTED WHEN PACKAGE IS COMPILED - BUT THIS
+# HAS BEEN TESTED THOROUGHLY BEFORE UPLOADING TO THE REPOSITORY
+
+# Read in the results of a particular agent state file, at timestep 40
+simResponse<-
+readSimResultFile("/home/user/iDynoMiCS/results/","agent_State",40)
+
+# Get the simulation iteration
+iteration<-agent_returnSimIteration(simResponse)
+
+# Get the simulation time
+time<-agent_returnSimTime(simResponse)
+
+# Get the simulation domain information (sizes and resolution)
+res<-agent_returnGridResolution(simResponse)
+i<-agent_returnIVoxels(simResponse)
+j<-agent_returnJVoxels(simResponse)
+k<-agent_returnKVoxels(simResponse)
+
+# Get all the species information from the file, and the number of species in the file
+allSpecies<-agent_returnSpeciesResultData(simResponse)
+numSpecies<-agent_returnNumSpecies(allSpecies)
+
+# Total the biomass column for each individual of a species (for example, Pseudomonas)
+biomassTotal<-
+agent_returnSpeciesColumnTotal(allSpecies, "Pseudomonas", "biomass")
+
+}
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{agent_state}
+\keyword{agent_sum}
+\keyword{species}

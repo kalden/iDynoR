@@ -1,0 +1,108 @@
+\name{Technique 4: Reading Solute Grid State (env_State) and Summary (env_Sum) Files}
+
+\alias{env_returnSimIteration}
+\alias{env_returnSimTime}
+\alias{env_returnSoluteGridRes}
+\alias{env_returnSoluteGridIVoxels}
+\alias{env_returnSoluteGridJVoxels}
+\alias{env_returnSoluteGridKVoxels}
+\alias{env_returnMeanBiofilmThickness}
+\alias{env_returnMaxBiofilmThickness}
+\alias{env_returnStdDevBiofilmThickness}
+\alias{env_returnGlobalProductionRates}
+\alias{env_returnConcentrationAndRateChange}
+\alias{env_returnSpecifiedSoluteData}
+
+
+\title{Technique 4: Reading Solute Grid State (env_State) and Summary (env_Sum) Files}
+\description{
+During the course of a simulation, iDynoMiCS will save output files describing the current environment states. These output files will be written at the interval specified by the outputPeriod parameter specified in the simulation input (protocol) file (see Protocol File section of the iDynoMiCS tutorial). In each file name, the character in brackets represents the iteration number at which the file was written. The env_State and env_Sum files describe, respectively, the overall state of the solute fields and a more summarized version. \cr
+\cr
+Technique 1 reads the file into a structure that can be processed in R. This section describes methods that can be utilised to extract data from an env_state or env_sum file for processing using statistical methods. This provides the user with the basic functionality to extract the data they need, then write their analysis scripts accordingly. Some example analysis scripts that use the methods in this section have been provided, and are described in Technique 5.\cr
+\cr
+The following methods are available for both env_State and env_Sum files:\cr
+\bold{env_returnSimIteration}: Returns the simulation iteration at which this output file was produced.\cr
+\bold{env_returnSimTime}: Returns the simulation time at which this output file was produced.\cr
+\bold{env_returnSoluteGridRes}: Returns the grid resolution of a specified solute grid. \cr
+\bold{env_returnSoluteGridIVoxels}: Returns the number of voxels in the I direction of a specified solute grid. \cr
+\bold{env_returnSoluteGridJVoxels}: Returns the number of voxels in the J direction of of a specified solute grid\cr
+\bold{env_returnSoluteGridKVoxels}: Returns the number of voxels in the K direction of of a specified solute grid.\cr
+\bold{env_returnMeanBiofilmThickness}: Returns the mean biofilm thickness calculated at the timepoint of a particular env_State or env_Sum file.\cr
+\bold{env_returnMaxBiofilmThickness}: Returns the maximum biofilm thickness calculated at the timepoint of a particular env_State or env_Sum file.\cr
+\bold{env_returnStdDevDBiofilmThickness}: Returns the standard deviation calculated from biofilm thickness at the timepoint of a particular env_State or env_Sum file.\cr
+\bold{env_returnGlobalProductionRates}: Extracts the global production rate of each solute from the result file. Each is stored in a list. An R list is returned which is a nested list, containing each of these lists.\cr
+\bold{env_returnConcentrationAndRateChange}: Extracts the concentration and uptake rate of each solute from the result file. Each is stored in a list. An R list is returned which is a nested list, containing each of these lists.\cr
+\bold{env_returnSpecifiedSoluteData}: Extracts the concentration grid for a specified solute from the result file. This information can be used to study how the concentration changes across the grid.\cr}
+\usage{
+env_returnSimIteration(xmlResultFile)
+
+env_returnSimTime(xmlResultFile)
+
+env_returnSoluteGridRes(xmlResultFile, soluteRequested)
+
+env_returnSoluteGridIVoxels(xmlResultFile, soluteRequested)
+env_returnSoluteGridJVoxels(xmlResultFile, soluteRequested)
+env_returnSoluteGridKVoxels(xmlResultFile, soluteRequested)
+
+env_returnMeanBiofilmThickness(xmlResultFile)
+env_returnMaxBiofilmThickness(xmlResultFile)
+env_returnStdDevBiofilmThickness(xmlResultFile)
+
+env_returnGlobalProductionRates(xmlResultFile)
+
+env_returnConcentrationAndRateChange(xmlResultFile)
+
+env_returnSpecifiedSoluteData(xmlResultFile, soluteRequested)
+
+
+}
+\arguments{
+  \item{xmlResultFile}{The structure created by Technique 1, containing the data in the agent_state or agent_sum file. Create using the method readSimResultFile}
+  \item{soluteRequested}{The solute of interest, for which the results should be extracted. Note that this should be a number, not the name of the solute}
+}
+
+\references{The iDynoMiCS tutorial has a detailed description of the env_Sum and env_State files. Study this to ensure you understand what each part of the output response is}
+
+\examples{
+\dontrun{
+# DONTRUN IS SET SO THIS IS NOT EXECUTED WHEN PACKAGE IS COMPILED - BUT THIS
+# HAS BEEN TESTED THOROUGHLY BEFORE UPLOADING TO THE REPOSITORY
+
+# Read in the results of a particular env state file, in this case iteration 40
+simResponse<-
+readSimResultFile("/home/user/iDynoMiCS/results/","env_State",40)
+
+# Get the simulation iteration
+iteration<-env_returnSimIteration(simResponse)
+
+# Get the simulation time
+time<-env_returnSimTime(simResponse)
+
+# Get the solute grid information, for a given solute. Let's say the first
+res<-env_returnSoluteGridRes(simResponse,1)
+i<-env_returnSoluteGridIVoxels(simResponse,1)
+j<-env_returnSoluteGridJVoxels(simResponse,1)
+k<-env_returnSoluteGridKVoxels(simResponse,1)
+
+# Get the biomass thickness information from the file
+meanThick<-env_returnMeanBiofilmThickness(simResponse)
+maxThick<-env_returnMaxBiofilmThickness(simResponse)
+stdDevThick<-env_returnStdDevBiofilmThickness(simResponse)
+
+# Get the global production rates at this timepoint
+gpr<-env_returnGlobalProductionRates(simResponse)
+
+# Get the concentration and rate change of solutes, at this timepoint
+c_rc<-env_returnConcentrationAndRateChange(simResponse)
+
+# Get the solute grid information for a particular solute, such as glucose. 
+#In this example, glucose is the first solute
+glucoseGrid<-env_returnSpecifiedSoluteData(simResponse, 1)
+
+}
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{env_state}
+\keyword{env_sum}
+\keyword{solutes}

@@ -1,0 +1,16 @@
+env_returnGlobalProductionRates <-
+function(xmlResultData)
+{
+	allGPR<-list()
+	for(gpr in 1:xmlSize(xmlResultData[[1]][[2]]))
+	{
+		soluteName<-xmlAttrs(xmlResultData[[1]][[2]][[gpr]])[[1]]
+
+		gprlist <- list()
+		gprlist[[soluteName]]<-xmlResultData[[1]][[2]][[gpr]][[1]]
+		# Add to the overall array
+		allGPR<-append(allGPR,gprlist)
+	}
+
+	return(allGPR)
+}

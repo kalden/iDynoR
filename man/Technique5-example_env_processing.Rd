@@ -1,0 +1,53 @@
+\name{Technique 5: Example Methods for Processing Solute Information}
+
+\alias{env_soluteProductionRateOverTime}
+\alias{plotContour}
+
+\title{Technique 5: Example Methods for Processing Solute Information}
+\description{
+The previous section detailed methods that have been provided for extracting information from an env_State or env_Sum file. This section describes exemplar methods that have been provided to show how this data can be processed. Remember however that this package has been provided to enable you to access simulation data in R, and we hope that you will be able to build on these methods that we provide. Note that these methods read in the env_State or env_Sum files, thus there is no need to independently run Technique 1 in this case.\cr
+\cr
+The following methods are available:\cr
+\bold{env_soluteProductionRateOverTime}: Processes all env_State files for a particular simulation run, storing the global production rate of a particular solute at each timepoint. A data frame of these responses is returned. This information could then be plotted if desired.\cr
+\bold{plotContour}: This routine draws a contour graph of the solute concentration field at a simultion timepoint. \cr}
+\usage{
+env_soluteProductionRateOverTime(resultFileFolder, resultFileType, numTimepoints, 
+outputPeriod,soluteReqd)
+
+plotContour(resultFileFolder, timepoint, soluteReqd, folderForGraphOut)
+
+
+}
+\arguments{
+   \item{resultFileFolder}{The directory containing all the result files written during the simulation.}
+   \item{resultFileType}{The output response file type to read in. This should be either agent_State, agent_Sum, env_State, or env_Sum}
+   \item{numTimepoints}{The number of timepoints comprising this simulation run}
+   \item{outputPeriod}{The number of iterations between simulation output. See protocol section of tutorial}
+   \item{soluteReqd}{An integer value representing the solute that is of interest. This can be taken from the order in the output file.}
+   \item{timepoint}{A particular timepoint from which the solute contour should be plotted}
+   \item{folderForGraphOut}{Each graph is output to file (as a pdf). This should specify the folder where the graph should be written to}
+}
+
+\examples{
+\dontrun{
+# DONTRUN IS SET SO THIS IS NOT EXECUTED WHEN PACKAGE IS COMPILED - BUT THIS
+# HAS BEEN TESTED THOROUGHLY BEFORE UPLOADING TO THE REPOSITORY
+
+# Track the production or consumption rate of glucose (first solute) over time, 
+# for 48 timepoints, where the output period was 1 (every step)
+glucoseProduction<-
+env_soluteProductionRateOverTime("/home/user/iDynoMiCS/results/", 
+"env_Sum", 48, 1,1)
+
+# Plot the contour for glucose (1) at timepoint 40
+plotContour("/home/user/Desktop/iDynoMiCS/results/single_species/", 40, 1, 
+"/home/user/Desktop/iDynoMiCS/results/single_species/graphs/")
+
+}
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{env_state}
+\keyword{env_sum}
+\keyword{graphs}
+\keyword{example-methods}
